@@ -1,7 +1,7 @@
 from faker import Faker
 
 faker = Faker()
-faker.seed(4231)
+Faker.seed(4231)
 
 
 def deliveries(order_id):

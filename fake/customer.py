@@ -1,7 +1,7 @@
 from faker import Faker
 
 faker = Faker()
-Faker.seed(1)
+Faker.seed(7)
 
 
 def create_customer():

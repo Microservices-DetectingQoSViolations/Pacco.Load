@@ -1,10 +1,8 @@
 from faker import Faker
+from fake.predefined_fake_data import tags
 
 faker = Faker()
-faker.seed(4231)
-
-tags = ['risk', 'risk1', 'glass', 'wine', 'oil', 'diesel', 'gasoline', 'chocolate', 'fruits',
-        'fruits1', 'fruits2', 'vehicle', 'armor', 'armor1', 'armor2', 'gun', 'gun1', 'gun2']
+Faker.seed(7)
 
 
 def resources(resource_id):
