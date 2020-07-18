@@ -1,6 +1,6 @@
 from faker import Faker
 
-Faker.seed(1)
+Faker.seed(7)
 faker = Faker()
 
 
@@ -9,13 +9,6 @@ def sign_up():
         "email": faker.ascii_safe_email(),
         "password": faker.password(),
         "role": "user"
-    }
-
-
-def sign_in_valid(email, password):
-    return {
-        "email": faker.ascii_safe_email(),
-        "password": faker.password()
     }
 
 
