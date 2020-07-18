@@ -1,19 +1,15 @@
 from faker import Faker
 from fake.predefined_fake_data import tags
+from fake.settings import fake_settings
 
 faker = Faker()
-Faker.seed(7)
+Faker.seed(fake_settings['seed'])
 
 
 def resources(resource_id):
     res_tags = []
-    rand_val = faker.random.random()
+    times = faker.random.randint(1, len(tags) - 1)
 
-    res_tags.append(tags[faker.random.randint(0, len(tags) - 1)])
-    if rand_val > 0.95:
-        res_tags.append(tags[faker.random.randint(0, len(tags) - 1)])
-    if rand_val > 0.99:
-        res_tags.append(tags[faker.random.randint(0, len(tags) - 1)])
 
     return {
         "resourceId": resource_id,

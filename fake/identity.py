@@ -1,6 +1,7 @@
 from faker import Faker
+from fake.settings import fake_settings
 
-Faker.seed(7)
+Faker.seed(fake_settings['seed'])
 faker = Faker()
 
 

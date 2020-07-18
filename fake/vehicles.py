@@ -1,9 +1,10 @@
 from faker_vehicle import VehicleProvider
 from faker import Faker
 from fake.predefined_fake_data import tags
+from fake.settings import fake_settings
 
-Faker.seed(7)
 faker = Faker()
+Faker.seed(fake_settings['seed'])
 faker.add_provider(VehicleProvider)
 
 

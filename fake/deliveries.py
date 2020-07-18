@@ -1,7 +1,8 @@
 from faker import Faker
+from fake.settings import fake_settings
 
 faker = Faker()
-Faker.seed(4231)
+Faker.seed(fake_settings['seed'])
 
 
 def deliveries(order_id):
