@@ -4,3 +4,4 @@ from .parcels import *
 from .deliveries import *
 from .availability import *
 from .predefined_fake_data import *
+from .vehicles import *
