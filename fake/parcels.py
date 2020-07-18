@@ -1,14 +1,14 @@
 from faker import Faker
+from fake.predefined_fake_data import tags, parcel_sizes
 
 faker = Faker()
-faker.seed(4231)
+Faker.seed(7)
 
 
-def parcels(customer_id):
+def create_parcel():
     return {
-        "customer_id": customer_id,
-        "variant": faker.name(),
-        "size": faker.address(),
+        "variant": faker.word(ext_word_list=tags),
+        "size": faker.word(ext_word_list=parcel_sizes),
         "name": faker.name(),
-        "description": faker.address()
+        "description": faker.sentence(ext_word_list=tags)
     }
