@@ -2,7 +2,7 @@ from locust import SequentialTaskSet, between, task
 from fake import identity, customer
 from json import dumps
 from settings import httpSettings, add_auth
-from http.on_response_actions import get_access_token
+from http_utils.on_response_actions import get_access_token
 
 
 class NewUserSection(SequentialTaskSet):
@@ -19,7 +19,7 @@ class NewUserSection(SequentialTaskSet):
     def sing_in(self):
         with self.client.post("/identity/sign-in", dumps(self.login_data),
                               headers=httpSettings['content_header']) as response:
-            self.access_token = get_access_token
+            self.access_token = get_access_token(response)
 
     @task
     def identity_me(self):
@@ -41,7 +41,7 @@ class NewCustomerSection(SequentialTaskSet):
     def sing_in(self):
         with self.client.post("/identity/sign-in", dumps(self.login_data),
                               headers=httpSettings['content_header']) as response:
-            self.access_token = get_access_token
+            self.access_token = get_access_token(response)
 
     @task
     def identity_me(self):
