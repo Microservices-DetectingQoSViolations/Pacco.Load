@@ -43,7 +43,8 @@ class FunWithParcels(TaskSet):
 
     @task(5)
     def get_parcels_volume(self):
-        self.client.get(f"/parcels/volume?parcelIds={parcels.any_parcel(self.parcel_ids)}", headers=add_auth({}, self.access_token),
+        self.client.get(f"/parcels/volume?parcelIds={parcels.any_parcel(self.parcel_ids)}",
+                        headers=add_auth({}, self.access_token),
                         name="/parcels/volume")
 
     @task(1)

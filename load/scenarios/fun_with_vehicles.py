@@ -16,8 +16,6 @@ class FunWithParcels(TaskSet):
 
         self.vehicle_ids = []
 
-        self.order_id = ''
-
     def on_start(self):
         self.client.post("/identity/sign-up", dumps(self.user_data), headers=httpSettings['content_header'])
         with self.client.post("/identity/sign-in", dumps(self.login_data),
