@@ -13,3 +13,7 @@ def create_parcel():
         "name": faker.name(),
         "description": faker.sentence(ext_word_list=tags)
     }
+
+
+def any_parcel(parcel_ids):
+    return faker.word(ext_word_list=parcel_ids)
