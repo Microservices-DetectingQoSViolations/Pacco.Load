@@ -1,2 +1,2 @@
-from .new_users import *
+from .basic_user import *
 from .full_scenario import *
