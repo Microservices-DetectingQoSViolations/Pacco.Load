@@ -35,3 +35,7 @@ def get_cap():
 
 def get_variant():
     return faker.word(ext_word_list=tags)
+
+
+def any_vehicle(vehicle_ids):
+    return faker.word(ext_word_list=vehicle_ids)
