@@ -30,10 +30,13 @@ class FunWithVehicles(BasicUserSection):
 
     @task(5)
     def get_vehicle(self):
-        self.client.get(f"/vehicles/{vehicles.any_vehicle(self.vehicle_ids)}", headers=add_auth({}, self.access_token))
+        self.client.get(f"/vehicles/{vehicles.any_vehicle(self.vehicle_ids)}",
+                        headers=add_auth({}, self.access_token),
+                        name="/vehicle")
 
     @task(5)
     def browse_vehicle(self):
         cap, var = vehicles.browse_vehicle()
         self.client.get(f"/vehicles?payloadCapacity={cap}&loadingCapacity={cap}&variants={var}",
-                        headers=add_auth({}, self.access_token))
+                        headers=add_auth({}, self.access_token),
+                        name="/vehicles?browse")
