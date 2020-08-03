@@ -1,4 +1,4 @@
-from locust import SequentialTaskSet, between, task
+from locust import SequentialTaskSet, task
 from fake import availability, deliveries, identity, customer, parcels, vehicles, orders
 from json import dumps
 from settings import httpSettings, add_auth
@@ -25,7 +25,8 @@ class FullScenario(SequentialTaskSet):
         self.delivery_id = ''
 
     def on_start(self):
-        self.client.post("/identity/sign-up", dumps(self.user_data), headers=httpSettings['content_header'])
+        self.client.post("/identity/sign-up", dumps(self.user_data),
+                         headers=httpSettings['content_header'])
 
     @task
     def sing_in(self):
@@ -35,7 +36,8 @@ class FullScenario(SequentialTaskSet):
 
     @task
     def identity_me(self):
-        self.client.get("/identity/me", headers=add_auth({}, self.access_token))
+        self.client.get("/identity/me",
+                        headers=add_auth({}, self.access_token))
 
     @task
     def complete_customer(self):
@@ -44,7 +46,8 @@ class FullScenario(SequentialTaskSet):
 
     @task
     def customer_data(self):
-        self.client.get("/customers/me", headers=add_auth({}, self.access_token))
+        self.client.get("/customers/me",
+                        headers=add_auth({}, self.access_token))
 
     @task
     def add_parcel(self):
@@ -54,31 +57,40 @@ class FullScenario(SequentialTaskSet):
 
     @task
     def get_parcels(self):
-        self.client.get("/parcels", headers=add_auth({}, self.access_token))
+        self.client.get("/parcels",
+                        headers=add_auth({}, self.access_token))
 
     @task
     def get_parcels_volume(self):
-        self.client.get(f"/parcels/volume?parcelIds={dumps([self.parcel_id])}", headers=add_auth({}, self.access_token),
+        self.client.get(f"/parcels/volume?parcelIds={dumps([self.parcel_id])}",
+                        headers=add_auth({}, self.access_token),
                         name="/parcels/volume")
 
     @task
     def create_order(self):
-        with self.client.post("/orders", headers=add_auth({}, self.access_token)) as response:
+        with self.client.post("/orders", dumps({}),
+                              headers=add_auth(httpSettings['content_header'], self.access_token)) as response:
             self.order_id = get_resource_id(response)
 
     @task
     def get_orders(self):
-        self.client.get("/orders", headers=add_auth({}, self.access_token))
+        self.client.get("/orders",
+                        headers=add_auth({}, self.access_token))
 
     @task
     def get_parcels(self):
-        self.client.get(f"/orders/{self.order_id}/parcels/{self.parcel_id}", name="/orders/{id}/parcels",
-                        headers=add_auth(httpSettings['content_header'], self.access_token))
+        self.client.get(f"/orders/{self.order_id}/parcels/{self.parcel_id}",
+                        headers=add_auth(httpSettings['content_header'], self.access_token),
+                        name="/order/parcels")
 
     @task
     def get_order(self):
-        self.client.get(f"/orders/{self.order_id}", name="/orders/{id}", headers=add_auth({}, self.access_token))
-        self.client.get(f"/orders/{self.order_id}", name="/orders/{id}", headers=add_auth({}, self.access_token))
+        self.client.get(f"/orders/{self.order_id}",
+                        headers=add_auth({}, self.access_token),
+                        name="/order")
+        self.client.get(f"/orders/{self.order_id}",
+                        headers=add_auth({}, self.access_token),
+                        name="/order")
 
     @task
     def create_vehicle(self):
@@ -90,7 +102,8 @@ class FullScenario(SequentialTaskSet):
     def browse_vehicle(self):
         cap, var = vehicles.browse_vehicle()
         self.client.get(f"/vehicles?payloadCapacity={cap}&loadingCapacity={cap}&variants={var}",
-                        headers=add_auth({}, self.access_token))
+                        headers=add_auth({}, self.access_token),
+                        name="/vehicles?browse")
 
     @task
     def create_availability(self):
@@ -100,26 +113,28 @@ class FullScenario(SequentialTaskSet):
     @task
     def browse_availability_by_tags(self):
         match_all, tags = availability.browse_tags_data(False)
-        self.client.get(f"/resources?tags={dumps(tags)}&matchAllTags={match_all}", name="/resources?tags",
-                        headers=add_auth({}, self.access_token))
+        self.client.get(f"/resources?tags={dumps(tags)}&matchAllTags={match_all}",
+                        headers=add_auth({}, self.access_token),
+                        name="/resources?tags")
 
     @task
     def set_delivery_date(self):
         self.client.post(f"/orders/{self.order_id}/vehicles/{self.vehicle_id}", dumps(self.order_date),
-                         name="/orders/{id}/vehicles/{id}",
-                         headers=add_auth(httpSettings['content_header'], self.access_token))
+                         headers=add_auth(httpSettings['content_header'], self.access_token),
+                         name="/orders/vehicles")
 
     @task
     def make_reservation(self):
         self.client.post(f"/availability/resources/{self.vehicle_id}/reservations/{self.order_date}",
                          dumps(availability.get_priority()),
-                         name="/availability/resources/{id}/reservations/{order_date}",
-                         headers=add_auth(httpSettings['content_header'], self.access_token))
+                         headers=add_auth(httpSettings['content_header'], self.access_token),
+                         name="/availability/resources/reservations/date")
 
     @task
     def check_reservation(self):
-        self.client.get(f"/availability/resources/{self.vehicle_id}", name="/availability/resources/{id}",
-                        headers=add_auth({}, self.access_token))
+        self.client.get(f"/availability/resources/{self.vehicle_id}",
+                        headers=add_auth({}, self.access_token),
+                        name="/availability/resources")
 
     @task
     def start_delivery(self):
@@ -131,22 +146,25 @@ class FullScenario(SequentialTaskSet):
     def fix_delivery(self):
         self.client.post(f"/deliveries/{self.delivery_id}/registrations",
                          dumps(deliveries.registrations(self.delivery_id, self.order_date)),
-                         name="/deliveries/{id}/registrations",
-                         headers=add_auth(httpSettings['content_header'], self.access_token))
+                         headers=add_auth(httpSettings['content_header'], self.access_token),
+                         name="/deliveries/registrations")
 
     @task
     def complete_delivery(self):
         with self.client.post(f"/deliveries/{self.delivery_id}/complete", dumps(deliveries.complete(self.order_date)),
-                              name="/deliveries/{id}/complete",
-                              headers=add_auth(httpSettings['content_header'], self.access_token)) as response:
+                              headers=add_auth(httpSettings['content_header'], self.access_token),
+                              name="/deliveries/complete") as response:
             self.delivery_id = get_resource_id(response)
 
     @task
     def check_delivery(self):
-        with self.client.get(f"/deliveries/{self.delivery_id}", name="/deliveries/{id}",
-                             headers=add_auth({}, self.access_token)) as response:
+        with self.client.get(f"/deliveries/{self.delivery_id}",
+                             headers=add_auth({}, self.access_token),
+                             name="/delivery") as response:
             self.delivery_id = get_resource_id(response)
 
     @task
     def get_order_after(self):
-        self.client.get(f"/orders/{self.order_id}", name="/orders/{id}", headers=add_auth({}, self.access_token))
+        self.client.get(f"/orders/{self.order_id}",
+                        headers=add_auth({}, self.access_token),
+                        name="/order")
