@@ -1,13 +1,19 @@
-from locust import SequentialTaskSet, between, task, HttpUser
-from load.scenarios.new_users import NewUserSection, NewCustomerSection
+from locust import between, HttpUser
+from load.scenarios.fun_with_parcels import FunWithParcels
+from load.scenarios.fun_with_vehicles import FunWithVehicles
+from load.scenarios.full_scenario import FullScenario
 
 
-class NewUser(HttpUser):
-    wait_time = between(0.5, 0.8)
-    tasks = [NewUserSection]
+class ParcelUser(HttpUser):
+    wait_time = between(1, 2)
+    tasks = [FunWithParcels]
 
 
-class NewCustomer(HttpUser):
-    wait_time = between(0.5, 0.8)
-    tasks = [NewCustomerSection]
+class VehicleUser(HttpUser):
+    wait_time = between(1, 2)
+    tasks = [FunWithVehicles]
 
+
+class FullScenarioUser(HttpUser):
+    wait_time = between(1, 2)
+    tasks = [FullScenario]
