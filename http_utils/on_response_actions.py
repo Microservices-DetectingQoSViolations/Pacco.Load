@@ -3,4 +3,4 @@ def get_access_token(response):
 
 
 def get_resource_id(response):
-    return response.headers['resource_id']
+    return response.headers['resource-id']
