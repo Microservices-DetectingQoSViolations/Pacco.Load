@@ -18,7 +18,8 @@ class BasicUserSection(TaskSet):
         with self.client.post("/identity/sign-in", dumps(self.login_data),
                               headers=httpSettings['content_header']) as response:
             self.access_token = get_access_token(response)
-            self.client.get("/identity/me", headers=add_auth({}, self.access_token))
+            self.client.get("/identity/me",
+                            headers=add_auth({}, self.access_token))
             self.client.post("/customers", dumps(self.customer_data),
                              headers=add_auth(httpSettings['content_header'], self.access_token))
 
@@ -30,8 +31,10 @@ class BasicUserSection(TaskSet):
 
     @task(1)
     def identity_me(self):
-        self.client.get("/identity/me", headers=add_auth({}, self.access_token))
+        self.client.get("/identity/me",
+                        headers=add_auth({}, self.access_token))
 
     @task(1)
     def customer_data(self):
-        self.client.get("/customers/me", headers=add_auth({}, self.access_token))
+        self.client.get("/customers/me",
+                        headers=add_auth({}, self.access_token))
