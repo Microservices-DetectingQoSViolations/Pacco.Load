@@ -1,17 +1,17 @@
 from locust import between, HttpUser
-from load.scenarios.fun_with_parcels import FunWithParcels
-from load.scenarios.fun_with_vehicles import FunWithVehicles
+from load.scenarios.parcel_spammer import ParcelSpammer
+from load.scenarios.vehicle_spammer import VehicleSpammer
 from load.scenarios.full_scenario import FullScenario
 
 
-class ParcelUser(HttpUser):
+class ParcelSpammerUser(HttpUser):
     wait_time = between(1, 2)
-    tasks = [FunWithParcels]
+    tasks = [ParcelSpammer]
 
 
-class VehicleUser(HttpUser):
+class VehicleSpammerUser(HttpUser):
     wait_time = between(1, 2)
-    tasks = [FunWithVehicles]
+    tasks = [VehicleSpammer]
 
 
 class FullScenarioUser(HttpUser):

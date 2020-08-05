@@ -6,7 +6,7 @@ from http_utils.on_response_actions import get_resource_id
 from load.scenarios.basic_user import BasicUserSection
 
 
-class FunWithVehicles(BasicUserSection):
+class VehicleSpammer(BasicUserSection):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.access_token = ''
