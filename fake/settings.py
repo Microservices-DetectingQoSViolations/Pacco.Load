@@ -1,3 +1,6 @@
+import random
+
+
 fake_settings = {
-    'seed': 15256
+    'seed': random.randint(0, 3452114)
 }
