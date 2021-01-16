@@ -28,6 +28,16 @@ class FullScenario(SequentialTaskSet):
         self.client.post("/identity/sign-up", dumps(self.user_data),
                          headers=httpSettings['content_header'])
 
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
+
+        self.client.get("/identity/me",
+                        headers=add_auth({}, self.access_token))
+
+        self.client.post("/customers", dumps(self.customer_data),
+                         headers=add_auth(httpSettings['content_header'], self.access_token))
+
     @task
     def sing_in(self):
         with self.client.post("/identity/sign-in", dumps(self.login_data),
@@ -38,11 +48,6 @@ class FullScenario(SequentialTaskSet):
     def identity_me(self):
         self.client.get("/identity/me",
                         headers=add_auth({}, self.access_token))
-
-    @task
-    def complete_customer(self):
-        self.client.post("/customers", dumps(self.customer_data),
-                         headers=add_auth(httpSettings['content_header'], self.access_token))
 
     @task
     def customer_data(self):
@@ -56,6 +61,12 @@ class FullScenario(SequentialTaskSet):
             self.parcel_id = get_resource_id(response)
 
     @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
+
+    @task
     def get_parcels(self):
         self.client.get("/parcels",
                         headers=add_auth({}, self.access_token))
@@ -65,6 +76,12 @@ class FullScenario(SequentialTaskSet):
         self.client.get(f"/parcels/volume?parcelIds={dumps([self.parcel_id])}",
                         headers=add_auth({}, self.access_token),
                         name="/parcels/volume")
+
+    @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
 
     @task
     def create_order(self):
@@ -84,6 +101,12 @@ class FullScenario(SequentialTaskSet):
                          name="/order/parcels")
 
     @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
+
+    @task
     def get_order(self):
         self.client.get(f"/orders/{self.order_id}",
                         headers=add_auth({}, self.access_token),
@@ -97,6 +120,12 @@ class FullScenario(SequentialTaskSet):
         with self.client.post(f"/vehicles", dumps(vehicles.create_vehicle()),
                               headers=add_auth(httpSettings['content_header'], self.access_token)) as response:
             self.vehicle_id = get_resource_id(response)
+
+    @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
 
     @task
     def browse_vehicle(self):
@@ -116,6 +145,12 @@ class FullScenario(SequentialTaskSet):
         self.client.get(f"/availability/resources?tags={dumps(tags)}&matchAllTags={match_all}",
                         headers=add_auth({}, self.access_token),
                         name="/availability/resources?tags")
+
+    @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
 
     @task
     def set_delivery_date(self):
@@ -138,6 +173,12 @@ class FullScenario(SequentialTaskSet):
                         name="/availability/resources")
 
     @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
+
+    @task
     def start_delivery(self):
         with self.client.post(f"/deliveries", dumps(deliveries.start_delivery(self.order_id, self.order_date)),
                               headers=add_auth(httpSettings['content_header'], self.access_token)) as response:
@@ -155,6 +196,12 @@ class FullScenario(SequentialTaskSet):
         self.client.post(f"/deliveries/{self.delivery_id}/complete", dumps(deliveries.complete(self.delivery_id)),
                          headers=add_auth(httpSettings['content_header'], self.access_token),
                          name="/deliveries/complete")
+
+    @task
+    def sing_in(self):
+        with self.client.post("/identity/sign-in", dumps(self.login_data),
+                              headers=httpSettings['content_header']) as response:
+            self.access_token = get_access_token(response)
 
     @task
     def check_delivery(self):
